@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\DTO\UserRequestDTO;
 use App\Entity\User;
-use App\Service\AuthService;
+use App\Service\ResponseService;
+use App\Service\SerializeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,12 +21,18 @@ class ApiAuthController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
-    private AuthService $authService;
+    private ResponseService $responseService;
 
-    public function __construct(EntityManagerInterface $entityManager, AuthService $authService)
-    {
+    private SerializeService $serializeService;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ResponseService $responseService,
+        SerializeService $serializeService
+    ) {
         $this->entityManager = $entityManager;
-        $this->authService = $authService;
+        $this->responseService = $responseService;
+        $this->serializeService = $serializeService;
     }
 
     /**
@@ -35,17 +41,15 @@ class ApiAuthController extends AbstractController
      */
     public function register(Request $request, UserPasswordHasherInterface $encoder): JsonResponse
     {
-        $request = $this->authService->transformJsonBody($request);
+        $deserializedDto = $this->serializeService->getDeserializedUserFromRequest($request);
 
-        $dto = new UserRequestDTO($request);
-
-        $user = new User($dto);
-        $user->setPassword($encoder->hashPassword($user, $dto->password));
+        $user = new User($deserializedDto);
+        $user->setPassword($encoder->hashPassword($user, $deserializedDto->getPassword()));
 
         $this->entityManager->persist($user);
-        $this->entityManager-> flush();
+        $this->entityManager->flush();
 
-        return $this->authService->respondWithSuccess($user->getUserIdentifier());
+        return $this->responseService->getSuccessResponse($user->getUserIdentifier());
     }
 
     /**

@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $password;
+    private ?string $password = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -40,8 +40,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct(UserRequestDTO $dto)
     {
-        $this->username = $dto->username;
-        $this->email = $dto->email;
+        $this->username = $dto->getUsername();
+        $this->email = $dto->getEmail();
     }
 
     public function getId(): ?int
@@ -59,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

@@ -4,30 +4,52 @@ declare(strict_types=1);
 
 namespace App\Entity\DTO;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserRequestDTO
 {
     /**
-     * @Assert\Length(min={3})
+     * @Assert\Length(min=3)
      */
-    public string $username;
+    private string $username;
 
     /**
-     * @Assert\NotCompromisedPassword()
+     * @Assert\NotBlank()
      */
-    public string $password;
+    private string $password;
 
     /**
      * @Assert\Email()
      */
-    public string $email;
+    private string $email;
 
-    public function __construct(Request $request)
+    public function getUsername(): string
     {
-        $this->username = $request->get('username');
-        $this->password = $request->get('password');
-        $this->email = $request->get('email');
+        return $this->username;
+    }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
     }
 }
