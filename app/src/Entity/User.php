@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use App\Entity\DTO\UserRequestDTO;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="user")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -34,11 +38,11 @@ class User implements UserInterface
      */
     private string $email;
 
-    public function __construct(string $username)
+    public function __construct(UserRequestDTO $dto)
     {
-        $this->username = $username;
+        $this->username = $dto->username;
+        $this->email = $dto->email;
     }
-
 
     public function getId(): ?int
     {
@@ -80,11 +84,11 @@ class User implements UserInterface
         return ['ROLE_USER'];
     }
 
-    public function getSalt()
+    public function getSalt(): void
     {
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
