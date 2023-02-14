@@ -142,5 +142,8 @@ app/web/js/
 ### mysql volume
 mysql/*
 
-###
+### env config
 app/.env
+
+###jwt keys
+app/config/jwt

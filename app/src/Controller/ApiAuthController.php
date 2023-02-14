@@ -8,18 +8,16 @@ use App\Entity\DTO\UserRequestDTO;
 use App\Entity\User;
 use App\Service\AuthService;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @Route("/api/auth")
+ * @Route("/api")
  */
-class AuthController extends AbstractController
+class ApiAuthController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
@@ -51,12 +49,12 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("/api/login_check", name="login_check", methods={"POST"})
+     * @Route("/home", name="api_home")
      */
-    public function getTokenUser(UserInterface $user, JWTTokenManagerInterface $JWTTokenManager): JsonResponse
+    public function getWelcomeMessage(): JsonResponse
     {
-        return new JsonResponse([
-            'token' => $JWTTokenManager->create($user),
+        return $this->json([
+            'message' => 'Welcome to your new homepage!',
         ]);
     }
 }

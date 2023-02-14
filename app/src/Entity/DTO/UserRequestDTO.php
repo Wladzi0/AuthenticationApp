@@ -10,19 +10,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserRequestDTO
 {
     /**
-     * @Assert\NotBlank()
      * @Assert\Length(min={3})
      */
     public string $username;
 
     /**
-     * @Assert\NotBlank()
      * @Assert\NotCompromisedPassword()
      */
     public string $password;
 
     /**
-     * @Assert\NotBlank()
      * @Assert\Email()
      */
     public string $email;
@@ -30,7 +27,7 @@ class UserRequestDTO
     public function __construct(Request $request)
     {
         $this->username = $request->get('username');
-        $this->password = $request->get('pasword');
+        $this->password = $request->get('password');
         $this->email = $request->get('email');
     }
 }
