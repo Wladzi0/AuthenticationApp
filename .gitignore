@@ -141,3 +141,6 @@ app/web/js/
 
 ### mysql volume
 mysql/*
+
+###
+app/.env
